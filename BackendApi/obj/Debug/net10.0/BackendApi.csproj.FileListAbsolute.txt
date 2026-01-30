@@ -1,0 +1,8 @@
+/Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net10.0/BackendApi.csproj.AssemblyReference.cache
+/Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net10.0/rpswa.dswa.cache.json
+/Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net10.0/BackendApi.GeneratedMSBuildEditorConfig.editorconfig
+/Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net10.0/BackendApi.AssemblyInfoInputs.cache
+/Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net10.0/BackendApi.AssemblyInfo.cs
+/Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net10.0/BackendApi.csproj.CoreCompileInputs.cache
+/Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net10.0/BackendApi.MvcApplicationPartsAssemblyInfo.cs
+/Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net10.0/BackendApi.MvcApplicationPartsAssemblyInfo.cache
