@@ -4,6 +4,8 @@ using BackendApi.Data;
 using BackendApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+
 
 namespace BackendApi.Controllers
 {
@@ -18,17 +20,29 @@ namespace BackendApi.Controllers
             _context = context;
         }
 
+        // private int GetUserId()
+        // {
+        //     foreach (var claim in User.Claims)
+        //     {
+        //         Console.WriteLine($"{claim.Type} = {claim.Value}");
+        //     }
+        //     var sub = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        //     Console.WriteLine("\n\n\n\n\n------------------\nUser ID from token: " + typeof(User));
+        //     Console.WriteLine("\n\n\n\n\n------------------\nUser ID from token: " + sub);
+        //     return int.Parse(sub!);
+        // }
+
         private int GetUserId()
         {
-            var sub = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-            Console.WriteLine("\n\n\n\n\n------------------\nUser ID from token: " + typeof(User));
-            return int.Parse(sub!);
+            return int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier)!
+            );
         }
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Eveniment>>> GetEvenimente()
         {
             var userId = GetUserId();
+            Console.WriteLine("\n\n\n\n\n------------------\nUser ID from token: " + userId);
             return await _context.Evenimente
                 .Where(e => e.UserId == userId)
                 .ToListAsync();

@@ -136,3 +136,4 @@
 /Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net8.0/BackendApi.pdb
 /Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net8.0/BackendApi.genruntimeconfig.cache
 /Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net8.0/ref/BackendApi.dll
+/Users/baciusebastian/Documents/Programare/CSharp/FullStackApp2/BackendApi/obj/Debug/net8.0/BackendApi.sourcelink.json

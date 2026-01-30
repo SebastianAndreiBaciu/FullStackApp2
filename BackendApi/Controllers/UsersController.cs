@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BackendApi.Controllers
 {
+    [Authorize] // 🔒 toate endpoint-urile necesită token
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] // 🔒 toate endpoint-urile necesită token
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;

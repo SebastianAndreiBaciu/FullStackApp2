@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import { EVENTS_URL, AUTH_URL } from "./utils/constants";
 import { AuthForm } from './components/AuthForm'
-import { UsersTable } from './components/UsersTable'
+import { EventsTable } from './components/EventsTable'
 
 interface EventItem {
   id: number
@@ -118,7 +118,7 @@ function App() {
           onModeChange={setAuthMode}
         />
       ) : (
-        <UsersTable users={events} loading={loading} onLogout={handleLogout} />
+        <EventsTable users={events} loading={loading} onLogout={handleLogout} />
       )}
     </div>
   )

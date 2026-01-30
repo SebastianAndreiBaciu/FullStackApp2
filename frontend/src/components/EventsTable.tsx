@@ -14,7 +14,7 @@ interface UsersTableProps {
   onLogout: () => void
 }
 
-export const UsersTable: React.FC<UsersTableProps> = ({ users, loading, onLogout }) => {
+export const EventsTable: React.FC<UsersTableProps> = ({ users, loading, onLogout }) => {
   return (
     <>
     <AddEvent />
