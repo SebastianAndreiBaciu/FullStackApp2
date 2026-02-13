@@ -38,6 +38,13 @@
 - **Password hashing:** Uses BCrypt in controller; when creating seed/test users, use `BCrypt.Net.BCrypt.HashPassword(...)`.
 - **GraphQL endpoint path:** GraphQL is exposed by HotChocolate via `MapGraphQL()` (default path `/graphql`). Frontend expects `http://localhost:5295/graphql` by default in `client.ts` — adjust if backend port changes.
 
+**Frontend libraries & UI stack**
+- This project uses React + Vite. If adding UI libraries, prefer Tailwind CSS + `shadcn/ui` (see https://ui.shadcn.com/) for component patterns. T  ypical integration steps:
+  - Install Tailwind dependencies: `tailwindcss`, `postcss`, `autoprefixer` and add `tailwind.config.cjs` + `postcss.config.cjs`.
+  - Add Tailwind directives to a CSS entry (we created `src/styles/tailwind.css`) and import it from `src/main.tsx`.
+  - Follow `shadcn/ui` docs to generate or copy components; `shadcn` expects Tailwind and Radix primitives.
+- **React Query:** this repo includes `@tanstack/react-query` for client data-fetching. Use `QueryClient` and `QueryClientProvider` at app root (wrap `App`), then use `useQuery` / `useMutation` in components.
+
 **When editing code**
 - Inspect the corresponding controller/graph type and `AppDbContext` first for data model changes.
 - Update or add EF migration when changing models (`dotnet ef migrations add <Name>`). Run `dotnet ef database update` to apply.

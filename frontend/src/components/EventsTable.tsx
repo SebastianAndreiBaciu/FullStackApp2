@@ -1,5 +1,6 @@
 import React from 'react'
 import { useQuery, useMutation } from '@apollo/client'
+import { Button } from './ui/button'
 import { AddEvent } from './AddEvent'
 import { GET_EVENIMENTE_QUERY, UPDATE_EVENIMENT_MUTATION, DELETE_EVENIMENT_MUTATION } from '../graphql/queries'
 
@@ -91,9 +92,9 @@ export const EventsTable: React.FC<EventsTableProps> = ({ onLogout }) => {
 
       <div className="header">
         <h1>📅 Evenimentele mele</h1>
-        <button className="btn-primary" onClick={onLogout}>
+        <Button onClick={onLogout} variant="destructive">
           Logout
-        </button>
+        </Button>
       </div>
 
       {loading && <p className="loading">Se încarcă...</p>}
@@ -158,15 +159,15 @@ export const EventsTable: React.FC<EventsTableProps> = ({ onLogout }) => {
 
                   <td>
                     {editingId === event.id ? (
-                      <>
-                        <button onClick={() => handleSaveEdit(event.id)}>Save</button>
-                        <button onClick={handleCancelEdit}>Cancel</button>
-                      </>
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={() => handleSaveEdit(event.id)}>Save</Button>
+                        <Button size="sm" variant="outline" onClick={handleCancelEdit}>Cancel</Button>
+                      </div>
                     ) : (
-                      <>
-                        <button onClick={() => handleStartEdit(event)}>Edit</button>
-                        <button onClick={() => handleDelete(event.id)}>Delete</button>
-                      </>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline" onClick={() => handleStartEdit(event)}>Edit</Button>
+                        <Button size="sm" variant="destructive" onClick={() => handleDelete(event.id)}>Delete</Button>
+                      </div>
                     )}
                   </td>
                 </tr>

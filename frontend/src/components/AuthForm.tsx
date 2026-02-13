@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from './ui/button'
 
 type AuthMode = 'login' | 'register'
 
@@ -29,18 +30,18 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   return (
     <div className="auth-card">
       <div className="auth-toggle">
-        <button
-          className={mode === 'login' ? 'active' : ''}
+        <Button
+          variant={mode === 'login' ? 'default' : 'outline'}
           onClick={() => onModeChange('login')}
         >
           Login
-        </button>
-        <button
-          className={mode === 'register' ? 'active' : ''}
+        </Button>
+        <Button
+          variant={mode === 'register' ? 'default' : 'outline'}
           onClick={() => onModeChange('register')}
         >
           Register
-        </button>
+        </Button>
       </div>
 
       <h1>{mode === 'login' ? 'Autentificare' : 'Înregistrare'}</h1>
@@ -96,9 +97,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         </div>
 
         <div className="form-actions">
-          <button type="submit" className="btn-submit">
+          <Button type="submit" className="w-full">
             {mode === 'login' ? 'Login' : 'Register'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
