@@ -20,14 +20,14 @@ namespace BackendApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(u => u.Eveniments).ToListAsync();
         }
         
         [AllowAnonymous] // 👈 Dacă vrei să permiti crearea user-ului fără autentificare
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.Include(u => u.Eveniments).FirstOrDefaultAsync(u => u.Id == id);
             if (user == null) return NotFound();
             return user;
         }

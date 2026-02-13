@@ -1,15 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { ApolloProvider } from '@apollo/client'
 import './App.css'
-import { EVENTS_URL, AUTH_URL } from "./utils/constants";
+import { AUTH_URL } from "./utils/constants";
+import { apolloClient } from './graphql/client'
 import { AuthForm } from './components/AuthForm'
 import { EventsTable } from './components/EventsTable'
-
-interface EventItem {
-  id: number
-  nume: string
-  data: string
-  locatie: string
-}
 
 interface AuthResponse {
   token: string
@@ -20,9 +15,6 @@ interface AuthResponse {
 }
 
 function App() {
-  const [events, setEvents] = useState<EventItem[]>([])
-  const [loading, setLoading] = useState(false)
-
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'))
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
   const [authForm, setAuthForm] = useState({
@@ -34,34 +26,6 @@ function App() {
   const [error, setError] = useState<string | null>(null)
 
   const isAuthenticated = !!token
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchEvents()
-    } else {
-      setEvents([])
-    }
-  }, [isAuthenticated])
-
-  const fetchEvents = async () => {
-    setLoading(true)
-    try {
-      const res = await fetch(EVENTS_URL, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      if (!res.ok) {
-        throw new Error('Nu am putut încărca utilizatorii')
-      }
-      const data = await res.json()
-      setEvents(data)
-    } catch (err) {
-      console.error('Error fetching users:', err)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleAuthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAuthForm({ ...authForm, [e.target.name]: e.target.value })
@@ -103,24 +67,25 @@ function App() {
   const handleLogout = () => {
     setToken(null)
     localStorage.removeItem('token')
-    setEvents([])
   }
 
   return (
-    <div className="container">
-      {!isAuthenticated ? (
-        <AuthForm
-          mode={authMode}
-          values={authForm}
-          error={error}
-          onChange={handleAuthChange}
-          onSubmit={handleAuthSubmit}
-          onModeChange={setAuthMode}
-        />
-      ) : (
-        <EventsTable users={events} loading={loading} onLogout={handleLogout} />
-      )}
-    </div>
+    <ApolloProvider client={apolloClient}>
+      <div className="container">
+        {!isAuthenticated ? (
+          <AuthForm
+            mode={authMode}
+            values={authForm}
+            error={error}
+            onChange={handleAuthChange}
+            onSubmit={handleAuthSubmit}
+            onModeChange={setAuthMode}
+          />
+        ) : (
+          <EventsTable onLogout={handleLogout} />
+        )}
+      </div>
+    </ApolloProvider>
   )
 }
 

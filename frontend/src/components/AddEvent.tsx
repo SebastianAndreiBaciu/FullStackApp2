@@ -1,7 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { EventModal } from './EventModal'
 
-export const AddEvent = () => {
+interface AddEventProps {
+  fetchEvents: () => void
+}
+
+export const AddEvent = ({fetchEvents}: AddEventProps) => {
 
   const [modalOpen, setModalOpen] = useState(false);
   return (
@@ -9,7 +13,7 @@ export const AddEvent = () => {
     // user i
     <div>
       <button onClick={() => { setModalOpen(true) }}>Add Event</button>
-      {modalOpen && (<EventModal setModalOpen={setModalOpen}></EventModal>)}
+      {modalOpen && (<EventModal setModalOpen={setModalOpen} fetchEvents={fetchEvents}></EventModal>)}
     </div>
   )
 }

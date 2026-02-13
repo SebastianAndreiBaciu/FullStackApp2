@@ -19,9 +19,9 @@ namespace BackendApi.Services
 
         public string GenerateToken(User user)
         {
-            var key = _config["Jwt:Key"];
-            var issuer = _config["Jwt:Issuer"];
-            var audience = _config["Jwt:Audience"];
+            var key = _config["Jwt:Key"] ?? string.Empty;
+            var issuer = _config["Jwt:Issuer"] ?? string.Empty;
+            var audience = _config["Jwt:Audience"] ?? string.Empty;
             var expiresInMinutes = int.Parse(_config["Jwt:ExpiresInMinutes"] ?? "60");
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));

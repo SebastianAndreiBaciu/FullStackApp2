@@ -1,64 +1,62 @@
 import React, { useState } from 'react';
+import { useMutation } from '@apollo/client';
 import { Input } from '../utils/Input';
-import { EVENTS_URL } from "../utils/constants";
+import { CREATE_EVENIMENT_MUTATION } from '../graphql/queries';
+
 interface EventModalProps {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchEvents: () => void;
 }
 
-export const EventModal: React.FC<EventModalProps> = ({ setModalOpen }) => {
-  const token = localStorage.getItem('token') || '';
+export const EventModal: React.FC<EventModalProps> = ({ setModalOpen, fetchEvents }) => {
   const [eventInfo, setEventInfo] = useState({
-    name: '',
-    date: '',
-    location: '',
-
+    id: 0,
+    nume: "Default Value",
+    data: "2026-01-30",
+    locatie: "Default Location",
   });
 
-  const submitEvent = () => {
-    // send eventInfo to backend
-    // post call to be
-    // body = eventIfo
-    fetch(EVENTS_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(eventInfo)
-    }).then(res => {
-      if (res.ok) {
-        console.log('Event added successfully');
-        setModalOpen(false);
-      } else {
-        console.log('Failed to add event');
-      }
-    }).catch(err => {
-      console.error('Error adding event:', err);
-      console.log('Error adding event');
-    });
+  // GraphQL mutation hook
+  const [createEvenimentGraphQL, { loading: gqlLoading }] = useMutation(CREATE_EVENIMENT_MUTATION, {
+    onCompleted: () => {
+      console.log('Event added via GraphQL');
+      setModalOpen(false);
+      fetchEvents();
+    },
+    onError: (err) => {
+      console.error('GraphQL error:', err);
+    },
+  });
+
+  const submitEvent = async () => {
+    console.log('Submitting event with info:', eventInfo);
+    try {
+      await createEvenimentGraphQL({
+        variables: {
+          input: {
+            nume: eventInfo.nume,
+            data: eventInfo.data,
+            locatie: eventInfo.locatie,
+          },
+        },
+      });
+    } catch (err) {
+      console.error('Error creating event:', err);
+    }
   }
 
-  const handleOnChangeEventName = (e: React.ChangeEvent<HTMLInputElement>) => setEventInfo((prev) => ({ ...prev, name: e.target.value }))
-  const handleOnChangeEventDate = (e: React.ChangeEvent<HTMLInputElement>) => setEventInfo((prev) => ({ ...prev, date: e.target.value }))
-  const handleOnChangeEventLocation = (e: React.ChangeEvent<HTMLInputElement>) => setEventInfo((prev) => ({ ...prev, location: e.target.value }))
+  const handleOnChangeEventName = (e: React.ChangeEvent<HTMLInputElement>) => setEventInfo((prev) => ({ ...prev, nume: e.target.value }))
+  const handleOnChangeEventDate = (e: React.ChangeEvent<HTMLInputElement>) => setEventInfo((prev) => ({ ...prev, data: e.target.value }))
+  const handleOnChangeEventLocation = (e: React.ChangeEvent<HTMLInputElement>) => setEventInfo((prev) => ({ ...prev, locatie: e.target.value }))
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30vh', backgroundColor: 'gray' }}>
 
-      <Input type="text" placeholder="Event Name" value={eventInfo.name} onChange={handleOnChangeEventName} />
-      <Input type="date" placeholder="Event Date" value={eventInfo.date} onChange={handleOnChangeEventDate} />
-      <Input type="text" placeholder="Event Location" value={eventInfo.location} onChange={handleOnChangeEventLocation} />
-      <button onClick={submitEvent}>Add Event</button>
+      <Input type="text" placeholder="Event Name" value={eventInfo.nume} onChange={handleOnChangeEventName} />
+      <Input type="date" placeholder="Event Date" value={eventInfo.data} onChange={handleOnChangeEventDate} />
+      <Input type="text" placeholder="Event Location" value={eventInfo.locatie} onChange={handleOnChangeEventLocation} />
+      <button onClick={submitEvent} disabled={gqlLoading}>Add Event</button>
       <button onClick={() => { setModalOpen(false) }}>Close</button>
     </div>
   )
 }
-
-
-// public int Id { get; set; }
-// public string Nume { get; set; }
-// public DateTime Data { get; set; }
-// public string Locatie { get; set; }
-
-// // Legătură cu utilizatorul care a creat evenimentul
-// public int UserId { get; set; }

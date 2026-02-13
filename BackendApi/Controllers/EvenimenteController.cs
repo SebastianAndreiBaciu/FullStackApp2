@@ -5,6 +5,7 @@ using BackendApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 
 namespace BackendApi.Controllers
@@ -15,9 +16,11 @@ namespace BackendApi.Controllers
     public class EvenimenteController : ControllerBase
     {
         private readonly AppDbContext _context;
-        public EvenimenteController(AppDbContext context)
+        private readonly ILogger<EvenimenteController> _logger;
+        public EvenimenteController(AppDbContext context, ILogger<EvenimenteController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // private int GetUserId()
@@ -34,16 +37,15 @@ namespace BackendApi.Controllers
 
         private int GetUserId()
         {
-            return int.Parse(
-                User.FindFirstValue(ClaimTypes.NameIdentifier)!
-            );
+            _logger.LogDebug("GetUserId() called");
+            return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Eveniment>>> GetEvenimente()
         {
             var userId = GetUserId();
-            Console.WriteLine("\n\n\n\n\n------------------\nUser ID from token: " + userId);
             return await _context.Evenimente
+                .Include(e => e.User)
                 .Where(e => e.UserId == userId)
                 .ToListAsync();
         }
@@ -53,6 +55,7 @@ namespace BackendApi.Controllers
         {
             var userId = GetUserId();
             var eveniment = await _context.Evenimente
+                .Include(e => e.User)
                 .FirstOrDefaultAsync(e => e.Id == id && e.UserId == userId);
 
             if (eveniment == null) return NotFound();
@@ -60,12 +63,18 @@ namespace BackendApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Eveniment>> CreateEveniment(Eveniment eveniment)
+        public async Task<ActionResult<Eveniment>> CreateEveniment(CreateEvenimentDto dto)
         {
             var userId = GetUserId();
-            Console.WriteLine("\n\n\n\n\n------------------\nUser ID from token: " + userId);
-            eveniment.UserId = userId;
-            Console.WriteLine("User ID from token: " + eveniment);
+            _logger.LogDebug("Creating event for user {UserId}", userId);
+
+            var eveniment = new Eveniment
+            {
+                Nume = dto.Nume,
+                Data = dto.Data,
+                Locatie = dto.Locatie,
+                UserId = userId
+            };
 
             _context.Evenimente.Add(eveniment);
             await _context.SaveChangesAsync();
